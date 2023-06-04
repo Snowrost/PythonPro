@@ -34,8 +34,8 @@ def test_op_minus():
 # test divide
 def test_op_divide():
     # given
-    x = 10
-    y = 2
+    x = 2
+    y = 10
     expected_result = 5
 
     # when
@@ -62,11 +62,18 @@ def test_op_multiply():
 
 
 # test main
-def test_main(monkeypatch, capsys):
+@pytest.mark.parametrize("input_string, expected_output", [
+    ("2 4 + 3", "6.0\n"),
+    ("2 7 + 3 -", "6.0\n"),
+    ("2 4 + 3 - 5 *", "15.0\n"),
+    ("2 4 + 3 - 5 * 3 /", "3.0\n")
+])
+
+def test_main(monkeypatch, capsys, input_string, expected_output):
     # given
-    monkeypatch.setattr("builtins.input", lambda _: "2 4 + 3 - 5 * 2 /")
+    monkeypatch.setattr("builtins.input", lambda _: input_string)
     # when
     main()
     # then
     captured = capsys.readouterr().out
-    assert captured == "7.5\n"
+    assert captured == expected_output
