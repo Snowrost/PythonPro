@@ -32,7 +32,7 @@ def test_op_minus():
 
 
 # test divide
-def test_op_divide():
+def test_op_divide(): # revised and correct
     # given
     x = 2
     y = 10
@@ -43,8 +43,6 @@ def test_op_divide():
 
     # then
     assert result == expected_result
-
-
 
 
 # test op_multiply
@@ -62,6 +60,9 @@ def test_op_multiply():
 
 
 # test main
+
+# revised and correct
+
 @pytest.mark.parametrize("input_string, expected_output", [
     ("2 4 + 3", "6.0\n"),
     ("2 7 + 3 -", "6.0\n"),
