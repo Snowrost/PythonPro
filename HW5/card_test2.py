@@ -11,11 +11,11 @@ class TestCard:
     def sample_card(self):
         return Card(
             card_id='123',
-            card_number='1234567890123456',
+            card_number='1234-5678-9012-3456',
             expiry_date='12/24',
             cvv_code='123',
             issue_date='01/01/22',
-            owner_id='example@example.com',
+            owner_id='578',
             card_status=CardStatus.NEW
         )
 
@@ -39,15 +39,15 @@ class TestCard:
         sample_card.block_card()
         assert sample_card.card_status == CardStatus.BLOCKED
 
-    def test_cvv_code(self, sample_card):
-        masked_cvv_code = "***"
-        assert sample_card.cvv_code == masked_cvv_code
+    def test_validate_card_number_valid(self, sample_card):
+        # when
+        sample_card.validate_card_number('1234-5678-9012-3456')
+        # then: no exception should be raised
 
-    def test_set_cvv_code(self, sample_card):
-        new_cvv_code = "456"
-        sample_card.cvv_code = new_cvv_code
-        assert sample_card.cvv_code == "***"
-        assert sample_card._cvv_code == new_cvv_code  # Verify the actual value is updated
+    def test_validate_card_number_invalid(self, sample_card):
+        # when/then
+        with pytest.raises(ValueError):
+            sample_card.validate_card_number('1234567890123456')
 
     class TestCardRepository:
         @pytest.fixture
@@ -62,9 +62,9 @@ class TestCard:
             # then:
             assert retrieved_card is not None
             assert retrieved_card.card_id == '123'
-            assert retrieved_card.card_number == '1234567890123456'
+            assert retrieved_card.card_number == '1234-5678-9012-3456'
             assert retrieved_card.expiry_date == '12/24'
-            assert retrieved_card.cvv_code == '***'
+            assert retrieved_card.cvv_code == '123'
             assert retrieved_card.issue_date == datetime.strptime('01/01/22', '%m/%d/%y')
             assert isinstance(retrieved_card.owner_id, uuid.UUID)
             assert retrieved_card.card_status == CardStatus.NEW.value

@@ -1,6 +1,7 @@
 from enum import Enum
 import uuid
 from datetime import datetime
+import re
 
 
 class CardStatus(Enum):
@@ -9,11 +10,12 @@ class CardStatus(Enum):
     BLOCKED = 'blocked'
 
 class Card:
-    def __init__(self, card_id: str, card_number: str, expiry_date: str, cvv_code: str, issue_date: str, owner_id: str, card_status):
+    def __init__(self, card_id: str, card_number, expiry_date: str, cvv_code: str, issue_date: str, owner_id: str, card_status):
         self.card_id = card_id
+        self.validate_card_number(card_number)
         self.card_number = card_number
         self.expiry_date = expiry_date
-        self._cvv_code = cvv_code
+        self.cvv_code = cvv_code
         self.issue_date = datetime.strptime(issue_date, '%m/%d/%y')
         self.owner_id = uuid.uuid5(uuid.NAMESPACE_DNS, owner_id)
         self.card_status = card_status
@@ -26,11 +28,10 @@ class Card:
     def block_card(self):
         self.card_status = CardStatus.BLOCKED
 
-    #Фича Masking розумію що не найкраща. Але з енкритптою і декриптою не до кінця розібрався, а валідація вже і так у домашці була(
-    @property
-    def cvv_code(self):
-        return '*' * len(self._cvv_code)
+    #Фича Data Validatione card number
+    def validate_card_number(self, card_number: str):
+        # Validate card number format using a regular expression
+        pattern = r'^\d{4}-\d{4}-\d{4}-\d{4}$'
+        if not re.match(pattern, card_number):
+            raise ValueError('Invalid card number format. Please use the format XXXX-XXXX-XXXX-XXXX.')
 
-    @cvv_code.setter
-    def cvv_code(self, value):
-        self._cvv_code = value

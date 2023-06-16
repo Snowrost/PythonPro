@@ -1,5 +1,3 @@
-import uuid
-
 from card2 import Card, CardStatus
 import sqlite3
 
