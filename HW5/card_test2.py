@@ -48,6 +48,34 @@ class TestCard:
         with pytest.raises(ValueError):
             sample_card.validate_card_number('1234567890123456')
 
+    def test_log_incident(self, sample_card):
+        # given
+        incident_type = 'unusual_activity'
+        description = 'Unauthorized transaction'
+
+        # when
+        sample_card.log_incident(incident_type, description)
+
+        # then
+        assert len(sample_card.incident_log) == 1
+        incident = sample_card.incident_log[0]
+        assert incident['incident_type'] == incident_type
+        assert incident['description'] == description
+
+    def test_log_incident_unusual_activity(self, sample_card, caplog):
+        # given
+        incident_type = 'unusual_activity'
+        description = 'Unauthorized transaction'
+
+        # when
+        sample_card.log_incident(incident_type, description)
+
+        # then
+        assert 'Unusual activity detected' in caplog.text
+        assert f"Unusual activity detected for card {sample_card.card_number}" in caplog.text
+        assert description in caplog.text
+
+
     class TestCardRepository:
         @pytest.fixture
         def card_repository(self):
