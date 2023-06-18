@@ -110,12 +110,12 @@ new pytests for logs
 
         def test_save_non_user(self, card_repository, sample_card):
             with pytest.raises(PermissionError):
-                card_repository.save_card(sample_card, role=Role.NONUSER)
+                card_repository.save_card(sample_card, role=Role.GUEST)
 
         def test_save_user_get_by_id_nonuser(self, card_repository, sample_card):
             card_repository.save_card(sample_card, role=Role.USER)
             with pytest.raises(PermissionError):
-                card_repository.get_card_by_id('123', role=Role.NONUSER)
+                card_repository.get_card_by_id('123', role=Role.GUEST)
 
 
         def test_close_connection(self, card_repository):
