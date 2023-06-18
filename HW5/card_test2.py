@@ -63,7 +63,7 @@ class TestCard:
             assert retrieved_card.card_id == '123'
             assert retrieved_card.card_number == '1234-5678-9012-3456'
             assert retrieved_card.expiry_date == '12/24'
-            assert retrieved_card.cvv_code == '123'
+            assert retrieved_card.verify_cvv_code('123')
             assert retrieved_card.issue_date == datetime.strptime('01/01/22', '%m/%d/%y')
             assert isinstance(retrieved_card.owner_id, uuid.UUID)
             assert retrieved_card.card_status == CardStatus.NEW.value

@@ -2,9 +2,11 @@ from enum import Enum
 import uuid
 from datetime import datetime
 import re
+import hashlib
 
 
-#Фічя розділ прав дотсупу
+'''Фічя розділ прав дотсупу 
+'''
 
 
 class Role(Enum):
@@ -38,7 +40,7 @@ class Card:
         self.issue_date = datetime.strptime(issue_date, '%m/%d/%y')
         self.owner_id = uuid.uuid5(uuid.NAMESPACE_DNS, owner_id)
         self.card_status = card_status
-
+        self.set_cvv_code(cvv_code)
     def activate_card(self):
         if self.card_status == CardStatus.BLOCKED:
             raise ValueError('Blocked cards cannot be activated.')
@@ -53,8 +55,14 @@ class Card:
         if not re.match(pattern, card_number):
             raise ValueError('Invalid card number format. Please use the format XXXX-XXXX-XXXX-XXXX.')
 
+    def set_cvv_code(self, cvv_code):
+        # Hash the cvv_code using sha256 and store the hashed value
+        self.cvv_code_hash = hashlib.sha256(cvv_code.encode()).hexdigest()
 
-
+    def verify_cvv_code(self, cvv_code):
+        # Verify if the provided cvv_code matches the stored hashed value
+        hashed_cvv_code = hashlib.sha256(cvv_code.encode()).hexdigest()
+        return self.cvv_code_hash == hashed_cvv_code
 
 
 
