@@ -57,7 +57,7 @@ class Card:
         if not re.match(pattern, card_number):
             raise ValueError('Invalid card number format. Please use the format XXXX-XXXX-XXXX-XXXX.')
 
-    '''методи енкоду і декоду хешування cvv 
+    '''методи енкоду і декоду хешування cvv це більше для себе розбирав
     '''
     def set_cvv_code(self, cvv_code):
         # Hash the cvv_code using sha256 and store the hashed value
@@ -69,8 +69,9 @@ class Card:
         return self.cvv_code_hash == hashed_cvv_code
 
 
-    '''Фічя с логів
+    '''Фічя з логами але я не впевнений до кінця у ній
     '''
+    
     def log_incident(self, incident_type, description):
         incident = {
             'timestamp': datetime.now(),
