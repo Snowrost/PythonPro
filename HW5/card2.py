@@ -12,14 +12,14 @@ import logging
 
 class Role(Enum):
     USER = 'user'
-    NONUSER = 'nonuser'
+    GUEST = 'guest'
 
 
 class RBAC:
     def __init__(self):
         self.role_permissions = {
             Role.USER: ['save_card', 'get_card_by_id'],
-            Role.NONUSER: []
+            Role.GUEST: []
         }
     def has_permission(self, role: Role, action: str) -> bool:
         permissions = self.role_permissions.get(role, [])
