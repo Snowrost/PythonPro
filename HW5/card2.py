@@ -54,7 +54,7 @@ class Card:
         pattern = r'^\d{4}-\d{4}-\d{4}-\d{4}$'
         if not re.match(pattern, card_number):
             raise ValueError('Invalid card number format. Please use the format XXXX-XXXX-XXXX-XXXX.')
-
+'''Хешування CVV'''
     def set_cvv_code(self, cvv_code):
         # Hash the cvv_code using sha256 and store the hashed value
         self.cvv_code_hash = hashlib.sha256(cvv_code.encode()).hexdigest()
