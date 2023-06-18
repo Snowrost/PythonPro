@@ -1,9 +1,8 @@
 import pytest
-from card2 import Card, CardStatus
+from card2 import Card, CardStatus, Role, RBAC
 from card_repository2 import CardRepository
-from datetime import datetime
-import sqlite3
 import uuid
+from datetime import datetime
 
 
 class TestCard:
@@ -54,11 +53,11 @@ class TestCard:
         def card_repository(self):
             return CardRepository(':memory:')
 
-        def test_save_and_get_card_by_id(self, card_repository, sample_card):
+        def test_save_and_get_card_by_id_user(self, card_repository, sample_card):
             # given
-            card_repository.save_card(sample_card)
+            card_repository.save_card(sample_card, role=Role.USER)
             # when
-            retrieved_card = card_repository.get_card_by_id('123')
+            retrieved_card = card_repository.get_card_by_id('123', role=Role.USER)
             # then:
             assert retrieved_card is not None
             assert retrieved_card.card_id == '123'
@@ -71,9 +70,19 @@ class TestCard:
 
         def test_get_card_by_nonexistent_id(self, card_repository):
             # when
-            retrieved_card = card_repository.get_card_by_id('nonexistent_id')
+            retrieved_card = card_repository.get_card_by_id('nonexistent_id', role=Role.USER)
             # then:
             assert retrieved_card is None
+
+        def test_save_non_user(self, card_repository, sample_card):
+            with pytest.raises(PermissionError):
+                card_repository.save_card(sample_card, role=Role.NONUSER)
+
+        def test_save_user_get_by_id_nonuser(self, card_repository, sample_card):
+            card_repository.save_card(sample_card, role=Role.USER)
+            with pytest.raises(PermissionError):
+                card_repository.get_card_by_id('123', role=Role.NONUSER)
+
 
         def test_close_connection(self, card_repository):
             card_repository.close()

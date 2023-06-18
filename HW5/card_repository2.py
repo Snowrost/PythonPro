@@ -1,5 +1,10 @@
-from card2 import Card, CardStatus
+from card2 import Card, RBAC
+from enum import Enum
 import sqlite3
+
+
+
+# Класс репозоиторію
 
 class CardRepository:
     def __init__(self, db_file):
@@ -22,7 +27,11 @@ class CardRepository:
         self.conn.execute(query)
         self.conn.commit()
 
-    def save_card(self, card):
+    def save_card(self, card, role):
+        rbac = RBAC()
+        if not rbac.has_permission(role, 'save_card'):
+            raise PermissionError('Insufficient privileges to save card.')
+
         query = '''
         INSERT INTO cards (card_id, card_number, expiry_date, cvv_code, issue_date, owner_id, card_status)
         VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -39,7 +48,11 @@ class CardRepository:
         self.conn.execute(query, values)
         self.conn.commit()
 
-    def get_card_by_id(self, card_id):
+    def get_card_by_id(self, card_id, role):
+        rbac = RBAC()
+        if not rbac.has_permission(role, 'get_card_by_id'):
+            raise PermissionError('Insufficient privileges to get card by ID.')
+
         query = '''
         SELECT * FROM cards WHERE card_id = ?
         '''

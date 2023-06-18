@@ -4,6 +4,25 @@ from datetime import datetime
 import re
 
 
+#Фічя розділ прав дотсупу
+
+
+class Role(Enum):
+    USER = 'user'
+    NONUSER = 'nonuser'
+
+
+class RBAC:
+    def __init__(self):
+        self.role_permissions = {
+            Role.USER: ['save_card', 'get_card_by_id'],
+            Role.NONUSER: []
+        }
+    def has_permission(self, role: Role, action: str) -> bool:
+        permissions = self.role_permissions.get(role, [])
+        return action in permissions
+
+
 class CardStatus(Enum):
     NEW = 'new'
     ACTIVE = 'active'
@@ -28,10 +47,14 @@ class Card:
     def block_card(self):
         self.card_status = CardStatus.BLOCKED
 
-    #Фича Data Validatione card number
     def validate_card_number(self, card_number: str):
         # Validate card number format using a regular expression
         pattern = r'^\d{4}-\d{4}-\d{4}-\d{4}$'
         if not re.match(pattern, card_number):
             raise ValueError('Invalid card number format. Please use the format XXXX-XXXX-XXXX-XXXX.')
+
+
+
+
+
 
