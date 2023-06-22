@@ -1,6 +1,6 @@
 import pytest
-from card2 import Card, CardStatus, Role, RBAC
-from card_repository2 import CardRepository
+from card import Card, CardStatus, Role, RBAC
+from card_repository import CardRepository
 import uuid
 from datetime import datetime
 
@@ -47,9 +47,7 @@ class TestCard:
         # when/then
         with pytest.raises(ValueError):
             sample_card.validate_card_number('1234567890123456')
-'''
-new pytests for logs
-'''
+
     def test_log_incident(self, sample_card):
         # given
         incident_type = 'unusual_activity'
@@ -82,10 +80,6 @@ new pytests for logs
         @pytest.fixture
         def card_repository(self):
             return CardRepository(':memory:')
-        
-        '''
-        Reworking pytests for working with db with RBAC
-        '''
 
         def test_save_and_get_card_by_id_user(self, card_repository, sample_card):
             # given
