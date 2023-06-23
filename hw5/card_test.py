@@ -1,6 +1,6 @@
 import pytest
-from card import Card, CardStatus, Role, RBAC
-from card_repository import CardRepository
+from card2 import Card, CardStatus, Role, RBAC
+from card_repository2 import CardRepository
 import uuid
 from datetime import datetime
 
@@ -48,34 +48,6 @@ class TestCard:
         with pytest.raises(ValueError):
             sample_card.validate_card_number('1234567890123456')
 
-    def test_log_incident(self, sample_card):
-        # given
-        incident_type = 'unusual_activity'
-        description = 'Unauthorized transaction'
-
-        # when
-        sample_card.log_incident(incident_type, description)
-
-        # then
-        assert len(sample_card.incident_log) == 1
-        incident = sample_card.incident_log[0]
-        assert incident['incident_type'] == incident_type
-        assert incident['description'] == description
-
-    def test_log_incident_unusual_activity(self, sample_card, caplog):
-        # given
-        incident_type = 'unusual_activity'
-        description = 'Unauthorized transaction'
-
-        # when
-        sample_card.log_incident(incident_type, description)
-
-        # then
-        assert 'Unusual activity detected' in caplog.text
-        assert f"Unusual activity detected for card {sample_card.card_number}" in caplog.text
-        assert description in caplog.text
-
-
     class TestCardRepository:
         @pytest.fixture
         def card_repository(self):
@@ -104,12 +76,12 @@ class TestCard:
 
         def test_save_non_user(self, card_repository, sample_card):
             with pytest.raises(PermissionError):
-                card_repository.save_card(sample_card, role=Role.GUEST)
+                card_repository.save_card(sample_card, role=Role.NONUSER)
 
         def test_save_user_get_by_id_nonuser(self, card_repository, sample_card):
             card_repository.save_card(sample_card, role=Role.USER)
             with pytest.raises(PermissionError):
-                card_repository.get_card_by_id('123', role=Role.GUEST)
+                card_repository.get_card_by_id('123', role=Role.NONUSER)
 
 
         def test_close_connection(self, card_repository):

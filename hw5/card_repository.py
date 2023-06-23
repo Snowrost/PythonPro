@@ -1,4 +1,4 @@
-from card import Card, RBAC
+from card2 import Card, RBAC
 from enum import Enum
 import sqlite3
 
