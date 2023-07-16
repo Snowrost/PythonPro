@@ -1,0 +1,29 @@
+{% extends "card_page.html" %}
+
+{% block style %}
+table, th, td {border: 1px solid black;  border-collapse: collapse;}
+{% endblock %}
+
+{% block cards_list %}
+{% if cards %}
+<h1>Card List</h1>
+<table>
+    <tr>
+        <th>Card Number</th>
+        <th>Expiry Date</th>
+        <th>CVV Code</th>
+    </tr>
+    {% for card in cards %}
+    <tr>
+        <td>{{ card.card_number }}</td>
+        <td>{{ card.expiry_date }}</td>
+        <td>{{ card.cvv_code }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="{% url 'create_card' %}" class="btn btn-primary">Add Card</a>
+{% else %}
+<p>No cards found.</p>
+{% endif %}
+{% endblock %}

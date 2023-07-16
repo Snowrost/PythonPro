@@ -1,0 +1,37 @@
+{% extends "card_page.html" %}
+
+{% block style %}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+{% endblock %}
+{% block card_create %}
+<h1>Create New Card</h1>
+<form action="{% url 'create_card' %}" method="post">
+    {% csrf_token %}
+    <label for="card_number">Card Number:</label>
+    <input type="text" id="card_number" name="card_number" required><br>
+
+    <label for="expiry_date">Expiry Date:</label>
+    <input type="text" id="expiry_date" name="expiry_date" required><br>
+
+    <label for="cvv_code">CVV Code:</label>
+    <input type="text" id="cvv_code" name="cvv_code" required><br>
+
+    <label for="issue_date">Issue Date:</label>
+    <input type="text" id="issue_date" name="issue_date" required><br>
+
+    <label for="owner_id">Owner ID:</label>
+    <input type="text" id="owner_id" name="owner_id" required><br>
+
+    <label for="card_status">Card Status:</label>
+    <select id="card_status" name="card_status" required>
+        <option value="new">New</option>
+        <option value="active">Active</option>
+        <option value="blocked">Blocked</option>
+    </select><br>
+
+    <input type="submit" value="Create Card">
+</form>
+{% endblock %}
