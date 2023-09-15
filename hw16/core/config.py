@@ -1,0 +1,1 @@
+DATABASE_URL = "postgresql://postgres:d87nv2at@127.0.0.1:5432/alc"
