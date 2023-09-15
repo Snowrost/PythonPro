@@ -37,3 +37,6 @@ class Card(models.Model):
             checksum += digit
 
         return checksum % 10 == 0
+
+    def __str__(self):
+        return f"{self.card_number} - {str(self.id)}"
