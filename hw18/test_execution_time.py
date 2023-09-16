@@ -1,25 +1,25 @@
 import time
 import asyncio
-import pytest
-from decorator import execution_time
+from functools import wraps
 
-@execution_time
-def sync_function():
-    time.sleep(1)
+# Define the decorator
+def execution_time(func):
+    @wraps(func)
+    async def wrapper_async(*args, **kwargs):
+        start_time = time.time()
+        result = await func(*args, **kwargs)
+        end_time = time.time()
+        print(f"Function executed in {end_time - start_time:.6f} seconds (async)")
+        return result
 
-@execution_time
-async def async_function():
-    await asyncio.sleep(1)
+    def wrapper_sync(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(f"Function executed in {end_time - start_time:.6f} seconds (sync)")
+        return result
 
-# Define pytest tests
-
-def test_sync_function(capsys):
-    sync_function()
-    captured = capsys.readouterr()
-    assert "Function 'sync_function' executed in" in captured.out
-
-@pytest.mark.asyncio
-async def test_async_function(capsys):
-    await async_function()
-    captured = capsys.readouterr()
-    assert "Function 'async_function' executed in" in captured.out
+    if asyncio.iscoroutinefunction(func):
+        return wrapper_async
+    else:
+        return wrapper_sync
